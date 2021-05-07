@@ -3,10 +3,9 @@ import { ResponsiveBump } from "@nivo/bump";
 const MyResponsiveBump = ({ data /* see data tab */ }) => {
   console.log(data);
   return (
-    <div>
+    <div style={{ width: "600px", height: "600px" }}>
       <ResponsiveBump
-        nodes={data.nodes}
-        links={data.links}
+        data={data}
         margin={{ top: 40, right: 100, bottom: 40, left: 60 }}
         colors={{ scheme: "spectral" }}
         lineWidth={3}
