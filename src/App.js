@@ -1,5 +1,3 @@
-// import logo from "./logo.svg";
-import "./App.css";
 import networkData from "./networkData.json";
 import bumpData from "./genres_data.json";
 import ResponsiveNetwork from "./components/responsiveNetwork.js";
