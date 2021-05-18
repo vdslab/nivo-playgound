@@ -4,6 +4,9 @@ import pprint
 import json
 # print([json.dumps(l) for l in csv.DictReader(open('data2.csv'))])
 years = 2000
+
+genres_data = []
+
 for year in range(years, 2020):
 
     json_open = open(
@@ -23,7 +26,23 @@ for year in range(years, 2020):
                 else:
                     json_list[j["name"]] += 1
     json_list = sorted(json_list.items(), key=lambda x: -x[1])
-    print(year, json_list)
+    # print(year, json_list)
+    if years == year:
+        for i in range(len(json_list)):
+            genres_data.append({"id": "{a}".format(a=json_list[i][0]),
+                                "data": []})
+    for i in range(len(json_list)):
+        for j in range(len(genres_data)):
+            if genres_data[j]["id"] == json_list[i][0]:
+                genres_data[j]["data"].append({"x": year, "y": i+1})
+print(genres_data)
+
+with open('genres_data.json', 'w',  encoding="utf-8_sig") as f:
+    json.dump(genres_data, f, ensure_ascii=False)
+
+# JSONファイルのロード
+with open('genres_data.json', 'r',  encoding="utf-8_sig") as f:
+    json_output = json.load(f)
 
 
 # json_list = [{}]
