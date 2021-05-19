@@ -3,45 +3,67 @@ import csv
 import pprint
 import json
 # print([json.dumps(l) for l in csv.DictReader(open('data2.csv'))])
-years = 2000
-
+years = 2015
 genres_data = []
-
-for year in range(years, 2020):
-
+json_list = {}
+for year in range(years, 2021):
+    print(year)
     json_open = open(
-        "../public/data/{year}/JP_DETAILS_{year}.json".format(year=year), "r", encoding="utf-8")
+        "../public/data/{year}/JP_CREDITS.json".format(year=year), "r", encoding="utf-8")
     json_load = json.load(json_open)
     json_load = json_load["data"]
-    json_list = {}
-    # print(json_load[0])
+    # print(json_load[0]["cast"])
     for i in json_load:
-        # print(i)
-        if "genres" in i:
-            for j in i["genres"]:
-                # print(j["name"])
-                if j["name"] not in json_list:
+        if "cast" in i and len(i["cast"]) != 0:
+            # print("DFghnjm")
+            allcast = []
+            for j in i["cast"]:
+                if j["name"] == "Yurika Kubo":
+                    print("DFGHJ")
+                allcast.append(j["name"])
+            # print(allcast)
+            for j in allcast:
+                if j not in json_list:
+                    # print("FGHJ")
+                    json_list[j] = {}
+                for k in allcast:
+                    if j != k:
+                        if k in json_list[j]:
+                            json_list[j][k] += 1
+                            # print(json_list[j])
+                        else:
+                            json_list[j][k] = 1
 
-                    json_list[j["name"]] = 1
-                else:
-                    json_list[j["name"]] += 1
-    json_list = sorted(json_list.items(), key=lambda x: -x[1])
-    # print(year, json_list)
-    if years == year:
-        for i in range(len(json_list)):
-            genres_data.append({"id": "{a}".format(a=json_list[i][0]),
-                                "data": []})
-    for i in range(len(json_list)):
-        for j in range(len(genres_data)):
-            if genres_data[j]["id"] == json_list[i][0]:
-                genres_data[j]["data"].append({"x": year, "y": i+1})
-print(genres_data)
+# print(json_list)
+ans = {"nodes": [], "links": []}
+jugh_node = set()
+jugh_links = []
+for key1, value1 in json_list.items():
+    for key2, value2 in value1.items():
+        if value2 >= 30:
+            print(key1, key2, value2)
+            if "{key}".format(key=key1) not in jugh_node:
+                jugh_node.add(key1)
+                ans["nodes"].append({"id": "{key}".format(
+                    key=key1), "radius": 3, "depth": 0, "color": "rgb(97, 205, 187)"})
+            jugh = True
+            for i in jugh_links:
+                if i[0] == key1 and i[1] == key2 or i[0] == key2 and i[1] == key1:
+                    jugh = False
+                    break
 
-with open('genres_data.json', 'w',  encoding="utf-8_sig") as f:
-    json.dump(genres_data, f, ensure_ascii=False)
+            if jugh:
+                jugh_links.append(
+                    ["{key}".format(key=key1), "{key}".format(key=key2)])
+                ans["links"].append({"source": "{key}".format(
+                    key=key1), "target": "{key}".format(key=key2), "distance": "100000"})
+# print(jugh)
+
+with open('networkData.json', 'w',  encoding="utf-8_sig") as f:
+    json.dump(ans, f, ensure_ascii=False)
 
 # JSONファイルのロード
-with open('genres_data.json', 'r',  encoding="utf-8_sig") as f:
+with open('networkData.json', 'r',  encoding="utf-8_sig") as f:
     json_output = json.load(f)
 
 
